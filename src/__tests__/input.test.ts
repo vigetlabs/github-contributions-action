@@ -77,8 +77,8 @@ describe('action', () => {
 
     expect(getInputs()).toEqual({
       githubToken: 'abc',
-      endDate: new Date('2020-04-01T04:00:00.000Z'),
-      startDate: new Date('2020-03-25T04:00:00.000Z'),
+      endDate: new Date('2020-04-01T00:00:00.000Z'),
+      startDate: new Date('2020-03-25T00:00:00.000Z'),
       users: ['john', 'mary', 'tim'],
     });
   });
