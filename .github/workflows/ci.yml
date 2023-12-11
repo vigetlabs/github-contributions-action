@@ -55,8 +55,12 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 2000
+          days: 7
+          github-token: ${{ secrets.GH_TOKEN }}
+          slack-token: ${{ secrets.SLACK_TOKEN }}
+          slack-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          users: solomonhawk
 
       - name: Print Output
         id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+        run: echo "${{ steps.test-action.outputs.slackBlocks }}"
