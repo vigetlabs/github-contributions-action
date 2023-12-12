@@ -1,0 +1,28 @@
+name: 'GitHub Activity'
+description: 'Collects GitHub activity for a list of users'
+author: 'Viget Labs'
+
+branding:
+  icon: 'activity'
+  color: 'green'
+
+inputs:
+  days:
+    description: 'The duration of days to collect activity for'
+    default: '7'
+  github-token:
+    description: 'Classic GitHub access token with `repo` scope'
+    required: true
+  users:
+    description: 'Comma-separated list of GitHub usernames'
+    required: true
+
+outputs:
+  json:
+    description: 'JSON-encoded activity summary'
+  slackBlocks:
+    description: 'JSON-encoded slack blocks'
+
+runs:
+  using: node20
+  main: dist/index.js

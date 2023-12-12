@@ -1,24 +1,58 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'GitHub Contributions Slack Report'
+description:
+  'Collects GitHub activity for a list of users and reports it to Slack'
+author: 'Viget Labs'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'activity'
+  color: 'green'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  days:
+    description: 'The duration of days to collect activity for'
+    default: '7'
+  github-token:
+    description: 'Classic GitHub access token with `repo` scope'
     required: true
-    default: '1000'
+  slack-token:
+    description: 'Slack bot access token'
+    required: true
+  slack-channel-id:
+    description: 'Slack channel ID to post to'
+    required: true
+  users:
+    description: 'Comma-separated list of GitHub usernames'
+    required: true
 
-# Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  json:
+    description: 'JSON-encoded activity summary'
+    value: ${{ steps.collect.outputs.json }}
+  slackBlocks:
+    description: 'JSON-encoded slack blocks'
+    value: ${{ steps.collect.outputs.slackBlocks }}
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Collect GitHub activity
+      uses: ./.github/actions/collect-github-activity
+      id: collect
+      with:
+        days: ${{ inputs.days }}
+        github-token: ${{ inputs.github-token }}
+        users: ${{ inputs.users }}
+
+    - name: Send message to Slack API
+      uses: archive/github-actions-slack@v2.8.0
+      id: notify
+      if: "${{ steps.collect.outputs.slackBlocks != '' }}"
+      with:
+        slack-bot-user-oauth-access-token: ${{ inputs.slack-token }}
+        slack-channel: ${{ inputs.slack-channel-id }}
+        slack-blocks: '${{ steps.collect.outputs.slackBlocks }}'
