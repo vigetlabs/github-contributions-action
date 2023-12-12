@@ -45,7 +45,7 @@ runs:
       id: collect
       with:
         days: ${{ inputs.days }}
-        token: ${{ inputs.token }}
+        github-token: ${{ inputs.github-token }}
         users: ${{ inputs.users }}
 
     - name: Send message to Slack API
@@ -53,6 +53,6 @@ runs:
       id: notify
       if: "${{ steps.collect.outputs.slackBlocks != '' }}"
       with:
-        slack-bot-user-oauth-access-token: ${{ inputs.slack_token }}
-        slack-channel: ${{ inputs.slack_channel_id }}
+        slack-bot-user-oauth-access-token: ${{ inputs.slack-token }}
+        slack-channel: ${{ inputs.slack-channel-id }}
         slack-blocks: '${{ steps.collect.outputs.slackBlocks }}'
