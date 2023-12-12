@@ -1,14 +1,12 @@
-name: 'GitHub Contributions'
+name: 'GitHub Contributions Slack Report'
 description:
   'Collects GitHub activity for a list of users and reports it to Slack'
 author: 'Viget Labs'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
   icon: 'activity'
   color: 'green'
 
-# Define your inputs here.
 inputs:
   days:
     description: 'The duration of days to collect activity for'
@@ -43,7 +41,7 @@ runs:
         fetch-depth: 0
 
     - name: Collect GitHub activity
-      uses: ./dist/index
+      uses: ./.github/actions/collect-github-activity
       id: collect
       with:
         days: ${{ inputs.days }}
