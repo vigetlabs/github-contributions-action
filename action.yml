@@ -1,5 +1,6 @@
 name: 'GitHub Contributions'
-description: 'Collects GitHub activity for a list of users and reports it to Slack'
+description:
+  'Collects GitHub activity for a list of users and reports it to Slack'
 author: 'Viget Labs'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
@@ -34,8 +35,13 @@ outputs:
     value: ${{ steps.collect.outputs.slackBlocks }}
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
     - name: Collect GitHub activity
       uses: ./dist/index
       id: collect
@@ -51,4 +57,4 @@ runs:
       with:
         slack-bot-user-oauth-access-token: ${{ inputs.slack_token }}
         slack-channel: ${{ inputs.slack_channel_id }}
-        slack-blocks: "${{ steps.collect.outputs.slackBlocks }}"
+        slack-blocks: '${{ steps.collect.outputs.slackBlocks }}'
